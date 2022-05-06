@@ -20,6 +20,19 @@ namespace APICore.Services.Impls
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
+
+        public async Task<IQueryable<Category>> GetAllCategoriesAsync()
+        {
+            var categories = _uow.CategoryRepository
+                                    .GetAll();
+            if (categories == null)
+            {
+                throw new CategoryNotFoundException(_localizer);
+            }
+
+            return await Task.FromResult(categories);
+        }
+
         public async Task<Category> GetCategoryAsync(int categID)
         {
             var category = await _uow.CategoryRepository
@@ -56,6 +69,30 @@ namespace APICore.Services.Impls
             await _uow.CommitAsync();
 
             return result;
+        }
+
+        public async Task<Category> UpdateCategoryAsync(CategoryRequest category, int iD)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var result = await _uow.CategoryRepository
+                                   .FirstOrDefaultAsync(c => c.Id == iD);
+
+            if (result != null)
+            {
+                result.Name = category.Name;
+                result.Description = category.Description;
+                await _uow.CategoryRepository.UpdateAsync(result, iD);
+                await _uow.CommitAsync();
+                return result;
+            }
+            else
+            {
+                throw new AuthorNotFoundException(_localizer);
+            }
         }
     }
 }

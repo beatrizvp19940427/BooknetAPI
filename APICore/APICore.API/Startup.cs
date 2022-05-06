@@ -71,6 +71,7 @@ namespace APICore.API
             services.AddTransient<ILogService, LogService>();
             services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IAuthorService, AuthorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

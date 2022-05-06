@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace APICore.API.Controllers
 {
@@ -27,6 +29,7 @@ namespace APICore.API.Controllers
         /// </summary>
         /// <param name="catID">Category ID.</param>
         [HttpGet()]
+        [Route("get-category")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetCategory(int catID)
@@ -39,7 +42,7 @@ namespace APICore.API.Controllers
         /// Add a Category
         /// </summary>
         /// <param name="category">
-        /// Setting request object. Include key and value. Key is unique in database.
+        /// Category request object. 
         /// </param>
         [HttpPost]
         [Route("add-category")]
@@ -47,6 +50,38 @@ namespace APICore.API.Controllers
         public async Task<IActionResult> AddCategory([FromBody] CategoryRequest category)
         {
             var result = await _categoryService.PutCategoryAsync(category);
+
+            var categoryResponse = _mapper.Map<CategoryResponse>(result);
+            return Ok(new ApiOkResponse(categoryResponse));
+        }
+        /// <summary>
+        /// Get All Category.
+        /// </summary>
+        [HttpGet()]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAllCategory()
+        {
+            var result = await _categoryService.GetAllCategoriesAsync();
+
+            var categoryResponse = _mapper.Map<IEnumerable<CategoryResponse>>(result);
+
+            return Ok(new ApiOkResponse(categoryResponse));
+        }
+
+        /// <summary>
+        /// Update a Category
+        /// </summary>
+        /// <param name="category">
+        /// <param name="ID">
+        /// Category request object and ID. 
+        /// </param>
+        [HttpPost]
+        [Route("update-category")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequest category, int ID)
+        {
+            var result = await _categoryService.UpdateCategoryAsync(category, ID);
 
             var categoryResponse = _mapper.Map<CategoryResponse>(result);
             return Ok(new ApiOkResponse(categoryResponse));

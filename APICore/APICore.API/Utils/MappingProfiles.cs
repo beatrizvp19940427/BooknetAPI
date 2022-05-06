@@ -30,8 +30,13 @@ namespace APICore.API.Utils
                .ForMember(d => d.LogType, opts => opts.MapFrom(source => source.LogType.ToString()))
                .ForMember(d => d.EventType, opts => opts.MapFrom(source => source.EventType.ToString()));
 
-            CreateMap<Category, CategoryResponse>();
+            CreateMap<Category, CategoryResponse>()
+                .ForMember(d => d.Name, opts => opts.MapFrom(source => source.Name.ToString()));
 
+            CreateMap<Author, AuthorResponse>()
+                .ForMember(d => d.FirstName, opts => opts.MapFrom(source => source.FistName.ToString()))
+                .ForMember(d => d.LastName, opts => opts.MapFrom(source => source.LastName.ToString()))
+                .ForMember(d => d.WebsiteName, opts => opts.MapFrom(source => source.Website.ToString()));
         }
     }
 }
