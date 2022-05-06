@@ -21,6 +21,19 @@ namespace APICore.Services.Impls
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
 
+        public async Task DeleteCategoryAsync(int catID)
+        {
+            var category = await _uow.CategoryRepository.FindAsync(c => c.Id == catID);
+
+            if (category == null)
+            {
+                throw new CategoryNotFoundException(_localizer);
+            }
+
+            _uow.CategoryRepository.Delete(category);
+            await _uow.CommitAsync();
+        }
+
         public async Task<IQueryable<Category>> GetAllCategoriesAsync()
         {
             var categories = _uow.CategoryRepository

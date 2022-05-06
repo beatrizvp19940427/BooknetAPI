@@ -86,6 +86,22 @@ namespace APICore.API.Controllers
             var categoryResponse = _mapper.Map<CategoryResponse>(result);
             return Ok(new ApiOkResponse(categoryResponse));
         }
+
+        /// <summary>
+        /// Delete a Category
+        /// </summary>
+        /// <param name="ID">
+        /// Category request the ID. 
+        /// </param>
+        [HttpPost]
+        [Route("delete-category")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> DeleteCategory(int ID)
+        {
+            await _categoryService.DeleteCategoryAsync(ID);
+
+            return Ok();
+        }
     }
 
    

@@ -14,5 +14,6 @@ namespace APICore.Services
         Task<Category> PutCategoryAsync(CategoryRequest categ);
         Task<IQueryable<Category>> GetAllCategoriesAsync();
         Task<Category> UpdateCategoryAsync(CategoryRequest category, int iD);
+        Task DeleteCategoryAsync(int catID);
     }
 }
